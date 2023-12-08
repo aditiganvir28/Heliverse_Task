@@ -1,0 +1,25 @@
+{
+    "domains": [
+        "Sales",
+        "Marketing",
+        "Finance",
+        "Management",
+        "IT",
+        "UI Designing",
+        "Business Development"
+    ],
+    "genders": [
+        "Male",
+        "Female",
+        "Agender",
+        "Non-binary",
+        "Polygender",
+        "Genderfluid",
+        "Genderqueer",
+        "Bigender"
+    ],
+    "availability": [
+        "true",
+        "false"
+    ]
+}
