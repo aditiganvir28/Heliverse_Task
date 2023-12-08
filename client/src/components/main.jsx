@@ -18,12 +18,13 @@ const MainPage = () => {
         Axios.post("http://localhost:5000/api/team", {
             team: team
         }).then(res => {
-            console.log(res.data.user)
             setTeamsCreated(res.data.user)
             setAllTeams([...teamsCreated, res.data.user])
             navigate('/createTeam')
         })
     }
+
+    
 
     return (
         <div className='w-[100%]'>

@@ -1,4 +1,4 @@
-import Axios from 'axios'
+
 import React, { useContext } from 'react'
 import { LoginContext } from './context'
 import TeamCard from './TeamCard'

@@ -3,6 +3,7 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const Users = require('../models/user')
 const Team = require('../models/team')
+const user = require('../models/user')
 
 const getAllUsers = asyncHandler(async (req, res) => {
 
@@ -15,7 +16,28 @@ const getAllUsers = asyncHandler(async (req, res) => {
             return res.send({ message: 'No userData found' })
         }
 
-        return res.send(User)
+        const page = parseInt(req.query.page)
+        const limit = parseInt(req.query.limit)
+
+        const startIndex = (page - 1) * limit
+        const lastIndex = (page) * limit
+
+        const results = {}
+        results.totalUser = User.length;
+        results.pageCount = Math.ceil(User.length / limit);
+
+        if (lastIndex < User.length) {
+            results.next = {
+                page: page + 1,
+            }
+        }
+        if (startIndex > 0) {
+            results.prev = {
+                page: page - 1,
+            }
+        }
+        results.result = User.slice(startIndex, lastIndex);
+        res.json(results)
     } catch (error) {
         console.error(error);
         res.status(500).send(error);
@@ -23,7 +45,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
-    const id = req.params
+    const id = req.params.id
     try {
         //Get all usersData from MongoDb
         const User = await Users.find({ id: id })
@@ -34,9 +56,9 @@ const getUser = asyncHandler(async (req, res) => {
         }
 
         return res.send(userData)
+
     } catch (error) {
-        console.error(error);
-        res.status(500).send(error);
+        console.log(error)
     }
 });
 
@@ -95,26 +117,23 @@ const deleteUser = asyncHandler(async (req, res) => {
 const searchUser = asyncHandler(async (req, res) => {
     const { names, domain, gender, available } = req.body;
 
-    // const nameParts = names.split(" ");
-
-    // const first_name = nameParts[0];
-    // const last_name = nameParts.slice(1).join(" ");
-
     try {
-        let users = await Users.find({ first_name: { $regex: new RegExp('^' + names, 'i') } });
+        let users = await Users.find();
+
+        if (users && names && names.length > 0) {
+            console.log("reached")
+            users = users.filter(user => user.first_name.toLowerCase().startsWith(names.toLowerCase()));
+        }
 
         if (users && domain && domain.length > 0) {
-            console.log(domain)
             users = users.filter(user => user.domain && domain.includes(user.domain));
         }
 
         if (users && gender && gender.length > 0) {
-            console.log(gender)
             users = users.filter(user => user.gender && gender.includes(user.gender));
         }
 
         if (users && available && available.length > 0) {
-            console.log(available)
             users = users.filter(user => user.available && available.includes(user.available));
         }
 
@@ -122,7 +141,31 @@ const searchUser = asyncHandler(async (req, res) => {
         //     return res.send({ message: "No users found matching the domain criteria" });
         // }
 
-        return res.send({ message: "Users found", users });
+        const page = parseInt(req.query.page)
+        const limit = parseInt(req.query.limit)
+
+        const startIndex = (page - 1) * limit
+        const lastIndex = (page) * limit
+
+        const results = {}
+        results.totalUser = users.length;
+        results.pageCount = Math.ceil(users.length / limit);
+
+        if (lastIndex < users.length) {
+            results.next = {
+                page: page + 1,
+            }
+        }
+        if (startIndex > 0) {
+            results.prev = {
+                page: page - 1,
+            }
+        }
+
+        results.result = users.slice(startIndex, lastIndex);
+        res.json(results)
+
+        // return res.send({ message: "Users found", users });
 
     } catch (error) {
         console.error(error);
@@ -155,8 +198,6 @@ const createTeam = asyncHandler(async (req, res) => {
 const getTeam = asyncHandler(async (req, res) => {
     const team_no = req.params.id
 
-    console.log(team_no)
-
     try {
         const team = await Team.findOne({ team_no: team_no }).populate('users');
 
@@ -180,13 +221,13 @@ const getAllTeams = asyncHandler(async (req, res) => {
             return res.send({ message: "No teams found" });
         }
 
-        teams.forEach(team => {
-            console.log(`Team Number: ${team.team_no}`);
-            console.log("Users in this team:");
-            team.users.forEach(user => {
-                console.log(user); // Output user details associated with this team
-            });
-        });
+        // teams.forEach(team => {
+        //     console.log(`Team Number: ${team.team_no}`);
+        //     console.log("Users in this team:");
+        //     team.users.forEach(user => {
+        //         console.log(user); // Output user details associated with this team
+        //     });
+        // });
 
         return res.send(teams); // Send the teams array with users to the frontend
     } catch (err) {

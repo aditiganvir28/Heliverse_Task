@@ -39,7 +39,7 @@ app.listen(port, (err) => {
 
 mongoose
   .connect(
-    "mongodb://0.0.0.0:27017/heliverse"
+    process.env.mongodb
   )
   .then(() => {
     console.log('DB Connection Succesfull')
