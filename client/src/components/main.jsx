@@ -15,7 +15,7 @@ const MainPage = () => {
     const { team, teamsCreated, setTeamsCreated, setAllTeams } = useContext(LoginContext)
 
     const createTeam = () => {
-        Axios.post("http://localhost:5000/api/team", {
+        Axios.post(process.env.REACT_APP_API_URL + "/api/team", {
             team: team
         }).then(res => {
             setTeamsCreated(res.data.user)

@@ -9,13 +9,13 @@ const Teams = () => {
     const {allTeams, setAllTeams, setTeamsCreated} = useContext(LoginContext)
 
     useEffect(()=>{
-        Axios.get("http://localhost:5000/api/getAllTeams").then(res=>{
+        Axios.get(process.env.REACT_APP_API_URL + "/api/getAllTeams").then(res=>{
             setAllTeams(res.data)
         })
     },[])
 
     const getTeam = (team_id) => {
-        Axios.get(`http://localhost:5000/api/team/${team_id}`).then(res=>{
+        Axios.get(process.env.REACT_APP_API_URL + `/api/team/${team_id}`).then(res=>{
             setTeamsCreated(res.data.users.users)
             navigate(`/team/${team_id}`)
         })  
