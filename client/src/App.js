@@ -21,6 +21,7 @@ function App() {
   const currentPage=useRef();
 
   const setfilter = () => {
+    console.log(process.env.REACT_APP_API_URL)
     Axios.post(process.env.REACT_APP_API_URL + `/api/filter?page=${currentPage.current}&limit=${limit}r`, {
             names: activeSearch,
             domain: domain,
