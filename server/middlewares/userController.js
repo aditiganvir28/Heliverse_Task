@@ -214,8 +214,11 @@ const getTeam = asyncHandler(async (req, res) => {
 })
 
 const getAllTeams = asyncHandler(async (req, res) => {
+    console.log("reached")
     try {
         const teams = await Team.find().populate('users');
+
+        console.log(teams)
 
         if (!teams || teams.length === 0) {
             return res.send({ message: "No teams found" });
