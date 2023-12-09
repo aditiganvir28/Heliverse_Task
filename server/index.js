@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser')
 const app = express()
 
 const port = process.env.PORT
+const mongo = process.env.mongodb
 
 //Middlewares
 
@@ -39,7 +40,7 @@ app.listen(port, (err) => {
 
 mongoose
   .connect(
-    process.env.mongodb
+    mongo
   )
   .then(() => {
     console.log('DB Connection Succesfull')
