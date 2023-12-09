@@ -235,7 +235,7 @@ const getAllTeams = asyncHandler(async (req, res) => {
         return res.send(teams); // Send the teams array with users to the frontend
     } catch (err) {
         console.log(err);
-        return res.status(500).send({ message: "Internal server error" });
+        return res.status(500).send({ message: "Internal server error", err });
     }
 });
 
